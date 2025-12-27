@@ -1,0 +1,47 @@
+type User @table {
+  email: String!
+  userType: String!
+  createdAt: Timestamp!
+  displayName: String
+  photoUrl: String
+}
+
+type JobSeekerProfile @table {
+  user: User!
+  firstName: String!
+  lastName: String!
+  phoneNumber: String
+  address: String
+  resumeUrl: String
+  bio: String
+}
+
+type EmployerProfile @table {
+  user: User!
+  companyName: String!
+  industry: String
+  website: String
+  companyDescription: String
+  companyLogoUrl: String
+}
+
+type JobPosting @table {
+  employerProfile: EmployerProfile!
+  title: String!
+  description: String!
+  location: String!
+  jobType: String!
+  postedAt: Timestamp!
+  salaryRange: String
+  experienceLevel: String
+  requiredSkills: [String]
+}
+
+type Application @table {
+  jobSeekerProfile: JobSeekerProfile!
+  jobPosting: JobPosting!
+  appliedAt: Timestamp!
+  status: String!
+  coverLetter: String
+  resumeUrl: String
+}

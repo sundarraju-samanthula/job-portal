@@ -1,0 +1,68 @@
+mutation SeedDatabase @transaction @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  user_insertMany(data: [
+    {
+      id: "67f3a9c1-5b97-48c8-9158-7f6ed44a189a",
+      createdAt: "2024-04-25T12:00:00Z",
+      displayName: "John Doe",
+      email: "john.doe@example.com",
+      photoUrl: "https://example.com/john.jpg",
+      userType: "jobSeeker"
+    },
+    {
+      id: "7a8b2d5e-8f9c-4b2a-9d3e-5a7b1c6d8e4f",
+      createdAt: "2024-04-24T10:00:00Z",
+      displayName: "Jane Smith",
+      email: "jane.smith@example.com",
+      photoUrl: "https://example.com/jane.jpg",
+      userType: "employer"
+    }
+  ])
+  jobSeekerProfile_insertMany(data: [
+    {
+      id: "b9c8a3f2-4e6d-4a8f-8b2c-9d5e6f7a8b9c",
+      userId: "67f3a9c1-5b97-48c8-9158-7f6ed44a189a",
+      address: "123 Main St",
+      bio: "Experienced software engineer",
+      firstName: "John",
+      lastName: "Doe",
+      phoneNumber: "555-123-4567",
+      resumeUrl: "https://example.com/john_resume.pdf"
+    }
+  ])
+  employerProfile_insertMany(data: [
+    {
+      id: "1c2d3e4f-5a6b-4c8d-9e0f-1a2b3c4d5e6f",
+      userId: "7a8b2d5e-8f9c-4b2a-9d3e-5a7b1c6d8e4f",
+      companyDescription: "A leading tech company",
+      companyLogoUrl: "https://example.com/company_logo.png",
+      companyName: "Acme Corp",
+      industry: "Technology",
+      website: "https://acme.com"
+    }
+  ])
+  jobPosting_insertMany(data: [
+    {
+      id: "e3f2d1c0-9b8a-4f7e-a2c3-8d7e9f1a2b3c",
+      employerProfileId: "1c2d3e4f-5a6b-4c8d-9e0f-1a2b3c4d5e6f",
+      description: "Looking for a skilled engineer",
+      experienceLevel: "Mid-level",
+      jobType: "Full-time",
+      location: "New York",
+      postedAt: "2024-04-25T10:00:00Z",
+      requiredSkills: ["Java", "Spring"],
+      salaryRange: "$80k-$100k",
+      title: "Software Engineer"
+    }
+  ])
+  application_insertMany(data: [
+    {
+      id: "f4e3d2c1-8a7b-4c9d-a1e2-7f6e8d9c0b1a",
+      jobPostingId: "e3f2d1c0-9b8a-4f7e-a2c3-8d7e9f1a2b3c",
+      jobSeekerProfileId: "b9c8a3f2-4e6d-4a8f-8b2c-9d5e6f7a8b9c",
+      appliedAt: "2024-04-26T09:00:00Z",
+      coverLetter: "I am very interested in this position",
+      resumeUrl: "https://example.com/john_resume.pdf",
+      status: "pending"
+    }
+  ])
+}

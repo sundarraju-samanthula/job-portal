@@ -1,0 +1,52 @@
+mutation CreateJobSeekerProfile @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  jobSeekerProfile_insert(data: {
+    userId_expr: "auth.uid",
+    firstName: "Jane",
+    lastName: "Doe",
+    bio: "Example Bio",
+    address: "123 Main St",
+    phoneNumber: "555-1234",
+    resumeUrl: "http://example.com/resume.pdf"
+  })
+}
+
+query GetMyJobSeekerProfile @auth(level: USER) {
+  jobSeekerProfile(key: {userId_expr: "auth.uid"}) {
+    id
+    firstName
+    lastName
+    bio
+    address
+    phoneNumber
+    resumeUrl
+  }
+}
+
+query ListJobPostings @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  jobPostings(limit: 50) {
+    id
+    title
+    description
+    location
+    salaryRange
+    postedAt
+    jobType
+    experienceLevel
+    employerProfile {
+      companyName
+      companyLogoUrl
+      companyDescription
+    }
+  }
+}
+
+mutation ApplyToJob($jobPostingId: UUID!, $coverLetter: String, $resumeUrl: String) @auth(level: USER) {
+  application_insert(data: {
+    jobPostingId: $jobPostingId,
+    jobSeekerProfile: {userId_expr: "auth.uid"},
+    appliedAt_expr: "request.time",
+    coverLetter: $coverLetter,
+    resumeUrl: $resumeUrl,
+    status: "APPLIED"
+  })
+}
