@@ -72,7 +72,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       );
       _contentController.forward();
     } else {
-      Get.offAllNamed('/roles');
+      Get.offAllNamed('/role');
     }
   }
 
@@ -140,10 +140,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 }
 
-/* -------------------------------------------------------------------------- */
-/*                               CONTENT                                      */
-/* -------------------------------------------------------------------------- */
-
 class _GlassContent extends StatelessWidget {
   final _OnboardData data;
   final AnimationController controller;
@@ -202,10 +198,6 @@ class _GlassContent extends StatelessWidget {
   }
 }
 
-/* -------------------------------------------------------------------------- */
-/*                              GLASS CARD                                    */
-/* -------------------------------------------------------------------------- */
-
 class _GlassCard extends StatelessWidget {
   final Widget child;
 
@@ -230,10 +222,6 @@ class _GlassCard extends StatelessWidget {
     );
   }
 }
-
-/* -------------------------------------------------------------------------- */
-/*                               AURORA                                       */
-/* -------------------------------------------------------------------------- */
 
 class _AuroraBlob extends StatelessWidget {
   final double size;
