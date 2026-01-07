@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -66,13 +67,26 @@ class _SplashScreenState extends State<SplashScreen>
     _startSequence();
   }
 
+  /// 🔐 AUTH-AWARE SPLASH FLOW
   Future<void> _startSequence() async {
     _logoController.forward();
     await Future.delayed(const Duration(milliseconds: 400));
     _textController.forward();
 
-    await Future.delayed(const Duration(seconds: 4));
-    Get.offAllNamed('/onboarding');
+    // ⏳ Let animation breathe
+    await Future.delayed(const Duration(seconds: 3));
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (!mounted) return;
+
+    if (user != null) {
+      // ✅ User already logged in
+      Get.offAllNamed('/home');
+    } else {
+      // ❌ Not logged in
+      Get.offAllNamed('/onboarding');
+    }
   }
 
   @override
@@ -124,7 +138,7 @@ class _SplashScreenState extends State<SplashScreen>
                           ),
                         ],
                       ),
-                      child: Hero(
+                      child: const Hero(
                         tag: 'app-logo',
                         child: Icon(
                           Icons.work_outline,
@@ -135,9 +149,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 44),
-
                 FadeTransition(
                   opacity: _textOpacity,
                   child: SlideTransition(

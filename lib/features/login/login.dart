@@ -8,8 +8,8 @@ import 'package:lottie/lottie.dart';
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
-  void _onGoogleLogin() {
-    Get.find<AuthController>().signInWithGoogle();
+  void _onGoogleLogin() async {
+    await Get.find<AuthController>().signInWithGoogle();
   }
 
   @override
