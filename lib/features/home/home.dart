@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:jobportal/controller/jobs_controller.dart';
 import 'package:jobportal/features/profile/profile_screen.dart';
@@ -384,11 +385,31 @@ class AnimatedJobCard extends StatelessWidget {
   }
 
   Future<void> _openApplyLink(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    debugPrint('Apply URL: $url');
+
+    final uri = Uri.tryParse(url);
+    if (uri == null) {
+      Get.snackbar('Invalid URL', url);
+      return;
     }
+
+    final canLaunch = await canLaunchUrl(uri);
+    debugPrint('Can launch: $canLaunch');
+
+    if (!canLaunch) {
+      Get.snackbar('Error', 'Cannot open link');
+      return;
+    }
+
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
+
+  // Future<void> _openApplyLink(String url) async {
+  //   final uri = Uri.parse(url);
+  //   if (await canLaunchUrl(uri)) {
+  //     await launchUrl(uri, mode: LaunchMode.externalApplication);
+  //   }
+  // }
 }
 
 class JobTypeBadge extends StatefulWidget {

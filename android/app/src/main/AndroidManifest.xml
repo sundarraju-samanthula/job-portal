@@ -1,7 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.jobportal">
 
-    <!-- Required for Firebase & Google Sign-In -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -30,24 +29,29 @@
 
         </activity>
 
-        <!-- REQUIRED: Google Play Services version (Firebase & Google Sign-In) -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <!-- Flutter embedding -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
 
     </application>
 
-    <!-- Required to query activities that can process text -->
+    <!-- 🔥 REQUIRED FOR APPLY BUTTON (url_launcher) -->
     <queries>
+
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+
     </queries>
 
 </manifest>
