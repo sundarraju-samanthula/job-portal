@@ -100,84 +100,6 @@ class _GlassBottomNav extends StatelessWidget {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// JOB LIST SCREEN
-////////////////////////////////////////////////////////////////////////////////
-
-// class JobListScreen extends StatelessWidget {
-//   const JobListScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       decoration: const BoxDecoration(
-//         gradient: LinearGradient(
-//           begin: Alignment.topCenter,
-//           end: Alignment.bottomCenter,
-//           colors: [Color(0xFFF7FAFF), Color(0xFFEFF4FF)],
-//         ),
-//       ),
-//       child: SafeArea(
-//         child: Column(
-//           children: [
-//             const SizedBox(height: 18),
-
-//             Padding(
-//               padding: const EdgeInsets.symmetric(horizontal: 22),
-//               child: Row(
-//                 children: [
-//                   const Expanded(
-//                     child: Text(
-//                       'Find Jobs',
-//                       style: TextStyle(
-//                         fontSize: 26,
-//                         fontWeight: FontWeight.w800,
-//                       ),
-//                     ),
-//                   ),
-//                   ShimmerProfileButton(
-//                     onPressed: () {
-//                       Navigator.push(
-//                         context,
-//                         MaterialPageRoute(
-//                           builder: (_) => const ProfileScreen(),
-//                         ),
-//                       );
-//                     },
-//                   ),
-//                 ],
-//               ),
-//             ),
-
-//             const SizedBox(height: 16),
-//             Padding(
-//               padding: const EdgeInsets.symmetric(horizontal: 22),
-//               child: _GlassSearchBar(),
-//             ),
-//             const SizedBox(height: 22),
-
-//             Expanded(
-//               child: ListView.builder(
-//                 padding: const EdgeInsets.symmetric(horizontal: 22),
-//                 itemCount: 5,
-//                 itemBuilder: (context, index) {
-//                   return AnimatedJobCard(
-//                     index: index,
-//                     title: 'Senior Flutter Developer',
-//                     company: 'Tech Labs',
-//                     location: ' ',
-//                     tag: index.isEven ? 'WFH' : 'Hybrid',
-//                   );
-//                 },
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class JobListScreen extends StatelessWidget {
   const JobListScreen({super.key});
 
@@ -320,172 +242,6 @@ void _openFilterSheet(BuildContext context) {
     builder: (_) => const _JobFilterSheet(),
   );
 }
-
-// class AnimatedJobCard extends StatelessWidget {
-//   final int index;
-//   final String title, company, location, tag;
-
-//   const AnimatedJobCard({
-//     super.key,
-//     required this.index,
-//     required this.title,
-//     required this.company,
-//     required this.location,
-//     required this.tag,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return TweenAnimationBuilder<double>(
-//       duration: Duration(milliseconds: 500 + index * 120),
-//       tween: Tween(begin: 0, end: 1),
-//       builder: (_, v, child) => Opacity(
-//         opacity: v,
-//         child: Transform.translate(
-//           offset: Offset(0, 40 * (1 - v)),
-//           child: child,
-//         ),
-//       ),
-//       child: GestureDetector(
-//         onTap: () {
-//           Navigator.push(
-//             context,
-//             PageRouteBuilder(
-//               transitionDuration: const Duration(milliseconds: 550),
-//               pageBuilder: (_, __, ___) => const JobDetailsScreen(),
-//             ),
-//           );
-//         },
-//         child: Container(
-//           margin: const EdgeInsets.only(bottom: 22),
-//           padding: const EdgeInsets.all(22),
-//           decoration: BoxDecoration(
-//             borderRadius: BorderRadius.circular(28),
-//             gradient: const LinearGradient(
-//               begin: Alignment.topLeft,
-//               end: Alignment.bottomRight,
-//               colors: [Color.fromARGB(255, 95, 221, 116), Color(0xFFDBEAFE)],
-//             ),
-//             boxShadow: [
-//               BoxShadow(
-//                 color: Colors.black.withOpacity(0.14),
-//                 blurRadius: 36,
-//                 offset: const Offset(0, 20),
-//               ),
-//             ],
-//           ),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               /// ───────── HEADER ─────────
-//               Row(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   /// 🏢 COMPANY LOGO (HERO)
-//                   Hero(
-//                     tag: 'job_logo_$index',
-//                     child: Container(
-//                       height: 48,
-//                       width: 48,
-//                       decoration: BoxDecoration(
-//                         color: Colors.white,
-//                         borderRadius: BorderRadius.circular(14),
-//                         boxShadow: [
-//                           BoxShadow(
-//                             color: Colors.black.withOpacity(0.15),
-//                             blurRadius: 12,
-//                           ),
-//                         ],
-//                       ),
-//                       child: ClipRRect(
-//                         borderRadius: BorderRadius.circular(14),
-//                         child: Image.network(
-//                           'https://via.placeholder.com/100',
-//                           fit: BoxFit.cover,
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-
-//                   const SizedBox(width: 14),
-
-//                   /// JOB INFO
-//                   Expanded(
-//                     child: Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         /// 🎯 JOB TITLE (HERO)
-//                         Hero(
-//                           tag: 'job_title_$index',
-//                           child: Material(
-//                             color: Colors.transparent,
-//                             child: Text(
-//                               title,
-//                               style: const TextStyle(
-//                                 fontSize: 16,
-//                                 fontWeight: FontWeight.w700,
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                         const SizedBox(height: 4),
-//                         Text(
-//                           company,
-//                           style: const TextStyle(
-//                             color: Colors.brown,
-//                             fontSize: 13,
-//                           ),
-//                         ),
-//                         Text(
-//                           location,
-//                           style: const TextStyle(
-//                             color: Colors.grey,
-//                             fontSize: 13,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-
-//                   /// 🏷 JOB TYPE BADGE
-//                   JobTypeBadge(type: tag),
-//                 ],
-//               ),
-
-//               const SizedBox(height: 22),
-
-//               /// ───────── ACTION BUTTONS ─────────
-//               Row(
-//                 children: [
-//                   /// SAVE
-//                   Expanded(
-//                     flex: 2,
-//                     child: SaveJobButton(
-//                       onTap: () {
-//                         debugPrint('Save tapped');
-//                       },
-//                     ),
-//                   ),
-//                   const SizedBox(width: 14),
-
-//                   /// APPLY
-//                   Expanded(
-//                     flex: 3,
-//                     child: NeonApplyButton(
-//                       onTap: () {
-//                         debugPrint('Apply tapped');
-//                       },
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class AnimatedJobCard extends StatelessWidget {
   final int index;
@@ -1049,13 +805,6 @@ class NotificationsScreen extends StatelessWidget {
       const Center(child: Text('Notifications'));
 }
 
-// class ProfileScreen extends StatelessWidget {
-//   const ProfileScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) => const Center(child: Text('Profile'));
-// }
-
 class _JobFilterSheet extends StatefulWidget {
   const _JobFilterSheet();
 
@@ -1491,16 +1240,7 @@ class InstaAnimatedJobCard extends StatelessWidget {
         ),
       ),
       child: GestureDetector(
-        onTap: () {
-          // Navigator.push(
-          //   context,
-          //   PageRouteBuilder(
-          //     transitionDuration: const Duration(milliseconds: 550),
-          //     pageBuilder: (_, __, ___) => {} ,
-          //     //JobDetailsScreen(job: job),
-          //   ),
-          // );
-        },
+        onTap: () {},
         child: Container(
           margin: const EdgeInsets.only(bottom: 22),
           padding: const EdgeInsets.all(22),
@@ -1605,27 +1345,6 @@ class InstaAnimatedJobCard extends StatelessWidget {
                   Expanded(flex: 2, child: WhatsAppButton(onTap: () => {})),
                   const SizedBox(width: 14),
                   Expanded(flex: 3, child: CallHRButton(onTap: () => {})),
-
-                  /// SAVE
-                  // Expanded(
-                  //   flex: 2,
-                  //   child: SaveJobButton(
-                  //     onTap: () {
-                  //       debugPrint('Save tapped');
-                  //     },
-                  //   ),
-                  // ),
-                  // const SizedBox(width: 14),
-
-                  // /// APPLY
-                  // Expanded(
-                  //   flex: 3,
-                  //   child: NeonApplyButton(
-                  //     onTap: () {
-                  //       debugPrint('Apply tapped');
-                  //     },
-                  //   ),
-                  // ),
                 ],
               ),
             ],
@@ -1876,8 +1595,6 @@ class _CallHRButtonState extends State<CallHRButton>
                     ),
                   ),
 
-                  /// CONTENT
-                  //SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -1955,69 +1672,6 @@ void callHR(String phone) {
   debugPrint("Calling HR $phone");
 }
 
-// class JobDetailsScreen extends StatelessWidget {
-//   const JobDetailsScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xFFF7FAFF),
-
-//       body: SafeArea(
-//         child: Stack(
-//           children: [
-//             /// MAIN CONTENT
-//             SingleChildScrollView(
-//               padding: const EdgeInsets.fromLTRB(22, 20, 22, 140),
-//               physics: const BouncingScrollPhysics(),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   /// 🔙 FLOATING BACK BUTTON
-//                   GestureDetector(
-//                     onTap: () => Navigator.pop(context),
-//                     child: Container(
-//                       height: 44,
-//                       width: 44,
-//                       decoration: BoxDecoration(
-//                         color: Colors.white.withOpacity(0.9),
-//                         borderRadius: BorderRadius.circular(16),
-//                         boxShadow: [
-//                           BoxShadow(
-//                             color: Colors.black.withOpacity(0.12),
-//                             blurRadius: 18,
-//                           ),
-//                         ],
-//                       ),
-//                       child: const Icon(
-//                         Icons.arrow_back_ios_new_rounded,
-//                         size: 18,
-//                       ),
-//                     ),
-//                   ),
-
-//                   const SizedBox(height: 26),
-
-//                   /// 🧱 JOB OVERVIEW
-//                   const _JobOverviewCard(),
-
-//                   const SizedBox(height: 30),
-
-//                   /// 🧱 JOB DETAILS
-//                   const _JobDescriptionBlock(),
-//                 ],
-//               ),
-//             ),
-
-//             /// 🔘 BOTTOM ACTION BAR
-//             const _BottomActionBar(),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class JobDetailsScreen extends StatelessWidget {
   final JobModel job;
 
@@ -2065,99 +1719,6 @@ class JobDetailsScreen extends StatelessWidget {
   }
 }
 
-// class _JobOverviewCard extends StatelessWidget {
-//   const _JobOverviewCard();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: const EdgeInsets.all(22),
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(30),
-//         gradient: const LinearGradient(
-//           begin: Alignment.topLeft,
-//           end: Alignment.bottomRight,
-//           colors: [Color(0xFFEFF6FF), Color(0xFFDBEAFE)],
-//         ),
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.black.withOpacity(0.15),
-//             blurRadius: 40,
-//             offset: const Offset(0, 24),
-//           ),
-//         ],
-//       ),
-//       child: Column(
-//         children: [
-//           /// HEADER
-//           Row(
-//             children: [
-//               /// COMPANY LOGO
-//               Container(
-//                 height: 62,
-//                 width: 62,
-//                 decoration: BoxDecoration(
-//                   color: Colors.white,
-//                   borderRadius: BorderRadius.circular(18),
-//                   boxShadow: [
-//                     BoxShadow(
-//                       color: const Color(0xFF2563EB).withOpacity(0.25),
-//                       blurRadius: 18,
-//                     ),
-//                   ],
-//                 ),
-//                 child: ClipRRect(
-//                   borderRadius: BorderRadius.circular(18),
-//                   child: Image.network(
-//                     'https://via.placeholder.com/120',
-//                     fit: BoxFit.cover,
-//                   ),
-//                 ),
-//               ),
-
-//               const SizedBox(width: 16),
-
-//               /// TITLE
-//               Expanded(
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: const [
-//                     Text(
-//                       'Senior Flutter Developer',
-//                       style: TextStyle(
-//                         fontSize: 20,
-//                         fontWeight: FontWeight.w900,
-//                       ),
-//                     ),
-//                     SizedBox(height: 6),
-//                     Text(
-//                       'Tech Labs • Bangalore',
-//                       style: TextStyle(color: Colors.grey, fontSize: 14),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-
-//           const SizedBox(height: 24),
-
-//           /// META INFO
-//           Wrap(
-//             spacing: 12,
-//             runSpacing: 12,
-//             children: const [
-//               _MetaGlassItem(title: 'Salary', value: '₹12–18 LPA'),
-//               _MetaGlassItem(title: 'Experience', value: '3+ yrs'),
-//               _MetaGlassItem(title: 'Posted', value: '2 days ago'),
-//               _MetaGlassItem(title: 'Job Type', value: 'Work from home'),
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 class _JobOverviewCard extends StatelessWidget {
   final JobModel job;
 
@@ -2285,72 +1846,6 @@ class _MetaGlassItem extends StatelessWidget {
   }
 }
 
-// class _JobDescriptionBlock extends StatelessWidget {
-//   const _JobDescriptionBlock();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: const EdgeInsets.all(22),
-
-//       /// 🌈 PREMIUM BACKGROUND (ONLY THIS IS CHANGED)
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(26),
-
-//         // Soft luxury gradient
-//         gradient: const LinearGradient(
-//           begin: Alignment.topLeft,
-//           end: Alignment.bottomRight,
-//           colors: [Color(0xFFFFFFFF), Color(0xFFF4F7FF), Color(0xFFEFF6FF)],
-//         ),
-
-//         // Depth + glow
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.black.withOpacity(0.08),
-//             blurRadius: 28,
-//             offset: const Offset(0, 18),
-//           ),
-//           BoxShadow(
-//             color: const Color(0xFF2563EB).withOpacity(0.10),
-//             blurRadius: 50,
-//             offset: const Offset(0, 26),
-//           ),
-//         ],
-//       ),
-
-//       /// ❗ TEXT CONTENT REMAINS EXACTLY SAME
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: const [
-//           Text(
-//             'Job Description',
-//             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
-//           ),
-//           SizedBox(height: 14),
-//           Text(
-//             'We are looking for a Senior Flutter Developer to build high-quality '
-//             'mobile applications. You will collaborate with designers and backend '
-//             'engineers to deliver scalable and beautiful solutions.\n\n'
-//             'Responsibilities:\n'
-//             '• Build Flutter applications\n'
-//             '• Maintain clean architecture\n'
-//             '• Optimize performance\n\n'
-//             'Requirements:\n'
-//             '• 3+ years Flutter experience\n'
-//             '• Strong Dart skills\n'
-//             '• REST API knowledge',
-//             style: TextStyle(
-//               fontSize: 14.5,
-//               height: 1.65,
-//               color: Colors.black87,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 class _JobDescriptionBlock extends StatelessWidget {
   final JobModel job;
 
@@ -2391,42 +1886,6 @@ class _JobDescriptionBlock extends StatelessWidget {
   }
 }
 
-// class _BottomActionBar extends StatelessWidget {
-//   const _BottomActionBar();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Positioned(
-//       left: 0,
-//       right: 0,
-//       bottom: 0,
-//       child: ClipRRect(
-//         child: BackdropFilter(
-//           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-//           child: Container(
-//             padding: const EdgeInsets.fromLTRB(22, 16, 22, 24),
-//             decoration: BoxDecoration(
-//               color: Colors.white.withOpacity(0.9),
-//               boxShadow: [
-//                 BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 30),
-//               ],
-//             ),
-//             child: Row(
-//               children: [
-//                 /// SAVE
-//                 Expanded(flex: 2, child: SaveJobButton(onTap: () {})),
-//                 const SizedBox(width: 16),
-
-//                 /// APPLY
-//                 Expanded(flex: 3, child: NeonApplyButton(onTap: () {})),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 class _BottomActionBar extends StatelessWidget {
   final JobModel job;
 
