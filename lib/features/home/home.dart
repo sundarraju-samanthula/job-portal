@@ -125,7 +125,7 @@ class JobListScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22),
               child: Row(
-                children: const [
+                children: [
                   Expanded(
                     child: Text(
                       'Find Jobs',
@@ -134,6 +134,16 @@ class JobListScreen extends StatelessWidget {
                         fontWeight: FontWeight.w800,
                       ),
                     ),
+                  ),
+                  ShimmerProfileButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ProfileScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
