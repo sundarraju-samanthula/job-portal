@@ -26,7 +26,7 @@ class JobModel {
       id: id,
       companyName: data['companyName'] ?? '',
       companyLogo: data['companyLogo'] ?? '',
-      jobTitle: data['jobTitle'] ?? data['jobRole'] ?? '',
+      jobTitle: data['jobTitle'] ?? '',
       salary: data['salary'] ?? '',
       workMode: data['workMode'] ?? '',
       location: data['location'] ?? '',

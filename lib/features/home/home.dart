@@ -106,7 +106,7 @@ class JobListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final JobsController controller = Get.put(JobsController());
+    final JobsController controller = Get.find<JobsController>();
 
     return Container(
       decoration: const BoxDecoration(
@@ -126,7 +126,7 @@ class JobListScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 22),
               child: Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: Text(
                       'Find Jobs',
                       style: TextStyle(
@@ -150,10 +150,13 @@ class JobListScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22),
+
+            /// SEARCH BAR
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 22),
               child: _GlassSearchBar(),
             ),
+
             const SizedBox(height: 22),
 
             /// JOB LIST
@@ -163,16 +166,20 @@ class JobListScreen extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (controller.jobs.isEmpty) {
-                  return const Center(child: Text('No jobs available'));
+                if (controller.filteredJobs.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No jobs found',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  );
                 }
 
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 22),
-                  itemCount: controller.jobs.length,
+                  itemCount: controller.filteredJobs.length,
                   itemBuilder: (context, index) {
-                    final JobModel job = controller.jobs[index];
-
+                    final JobModel job = controller.filteredJobs[index];
                     return AnimatedJobCard(index: index, job: job);
                   },
                 );
@@ -185,15 +192,109 @@ class JobListScreen extends StatelessWidget {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// SEARCH BAR
-////////////////////////////////////////////////////////////////////////////////
+// class _GlassSearchBar extends StatelessWidget {
+//   const _GlassSearchBar();
 
+//   @override
+//   Widget build(BuildContext context) {
+//     final controller = Get.find<JobsController>();
+//     final textController = TextEditingController();
+
+//     return ClipRRect(
+//       borderRadius: BorderRadius.circular(22),
+//       child: BackdropFilter(
+//         filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+//         child: Container(
+//           height: 56,
+//           padding: const EdgeInsets.symmetric(horizontal: 18),
+//           decoration: BoxDecoration(
+//             color: Colors.white.withOpacity(0.72),
+//             boxShadow: [
+//               BoxShadow(blurRadius: 24, color: Colors.black.withOpacity(0.06)),
+//             ],
+//           ),
+//           child: Row(
+//             children: [
+//               const Icon(Icons.search, color: Colors.grey),
+//               const SizedBox(width: 12),
+
+//               /// SEARCH FIELD
+//               Expanded(
+//                 child: Obx(() {
+//                   textController.value = TextEditingValue(
+//                     text: controller.searchQuery.value,
+//                     selection: TextSelection.collapsed(
+//                       offset: controller.searchQuery.value.length,
+//                     ),
+//                   );
+
+//                   return TextField(
+//                     controller: textController,
+//                     decoration: const InputDecoration(
+//                       hintText: 'Search jobs, roles, companies, location',
+//                       border: InputBorder.none,
+//                     ),
+//                     onChanged: controller.onSearchChanged,
+//                   );
+//                 }),
+//               ),
+
+//               /// ❌ CLEAR BUTTON (Animated)
+//               Obx(() {
+//                 return AnimatedSwitcher(
+//                   duration: const Duration(milliseconds: 220),
+//                   transitionBuilder: (child, anim) =>
+//                       ScaleTransition(scale: anim, child: child),
+//                   child: controller.searchQuery.value.isNotEmpty
+//                       ? GestureDetector(
+//                           key: const ValueKey('clear'),
+//                           onTap: () {
+//                             controller.clearSearch();
+//                             FocusScope.of(context).unfocus();
+//                           },
+//                           child: const Padding(
+//                             padding: EdgeInsets.only(right: 10),
+//                             child: Icon(
+//                               Icons.close_rounded,
+//                               color: Colors.grey,
+//                             ),
+//                           ),
+//                         )
+//                       : const SizedBox(key: ValueKey('empty')),
+//                 );
+//               }),
+
+//               /// FILTER BUTTON
+//               GestureDetector(
+//                 onTap: () => _openFilterSheet(context),
+//                 child: Container(
+//                   height: 38,
+//                   width: 38,
+//                   decoration: BoxDecoration(
+//                     color: const Color(0xFF2563EB).withOpacity(0.14),
+//                     borderRadius: BorderRadius.circular(12),
+//                   ),
+//                   child: const Icon(
+//                     Icons.tune,
+//                     size: 20,
+//                     color: Color(0xFF2563EB),
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 class _GlassSearchBar extends StatelessWidget {
   const _GlassSearchBar();
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<JobsController>();
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(22),
       child: BackdropFilter(
@@ -212,15 +313,31 @@ class _GlassSearchBar extends StatelessWidget {
               const Icon(Icons.search, color: Colors.grey),
               const SizedBox(width: 12),
 
-              /// SEARCH PLACEHOLDER
-              const Expanded(
-                child: Text(
-                  'Search jobs, roles, companies',
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+              Expanded(
+                child: TextField(
+                  onChanged: controller.onSearchChanged,
+                  decoration: const InputDecoration(
+                    hintText: 'Search jobs, company, location',
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
 
-              /// FILTER BUTTON
+              Obx(() {
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: controller.searchQuery.value.isNotEmpty
+                      ? GestureDetector(
+                          key: const ValueKey('clear'),
+                          onTap: controller.clearSearch,
+                          child: const Icon(Icons.close, color: Colors.grey),
+                        )
+                      : const SizedBox(),
+                );
+              }),
+
+              const SizedBox(width: 10),
+
               GestureDetector(
                 onTap: () => _openFilterSheet(context),
                 child: Container(
@@ -252,6 +369,228 @@ void _openFilterSheet(BuildContext context) {
     backgroundColor: Colors.transparent,
     builder: (_) => const _JobFilterSheet(),
   );
+}
+
+class _JobFilterSheet extends StatefulWidget {
+  const _JobFilterSheet();
+
+  @override
+  State<_JobFilterSheet> createState() => _JobFilterSheetState();
+}
+
+class _JobFilterSheetState extends State<_JobFilterSheet> {
+  final controller = Get.find<JobsController>();
+
+  String experience = '';
+  String workMode = '';
+
+  @override
+  void initState() {
+    super.initState();
+    experience = controller.selectedExperience.value;
+    workMode = controller.selectedWorkMode.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(34)),
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFFF1F5FF), Color(0xFFEAF0FF), Color(0xFFE0EAFF)],
+        ),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 80),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// HANDLE
+              Center(
+                child: Container(
+                  height: 4,
+                  width: 46,
+                  margin: const EdgeInsets.only(bottom: 18),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
+
+              /// HEADER
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Filter Jobs',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close_rounded),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 26),
+
+              /// EXPERIENCE
+              _filterSection(
+                title: 'Experience',
+                options: ['fresher', '0-1', '1-3', '3+'],
+                selected: experience,
+                onSelect: (v) => setState(() => experience = v),
+              ),
+
+              /// WORK MODE
+              _filterSection(
+                title: 'Work Mode',
+                options: ['WFH', 'Remote', 'Hybrid'],
+                selected: workMode,
+                onSelect: (v) => setState(() => workMode = v),
+              ),
+
+              const SizedBox(height: 32),
+
+              /// ACTIONS
+              Row(
+                children: [
+                  /// RESET
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          experience = '';
+                          workMode = '';
+                        });
+
+                        controller.resetFilters();
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 56,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: Colors.white,
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Reset',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 18),
+
+                  /// APPLY
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.selectedExperience.value = experience;
+                        controller.selectedWorkMode.value = workMode;
+                        controller.applyFilters();
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 56,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF2563EB), Color(0xFF4F46E5)],
+                          ),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Apply Filters',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// FILTER CHIPS
+  Widget _filterSection({
+    required String title,
+    required List<String> options,
+    required String selected,
+    required Function(String) onSelect,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+        ),
+        const SizedBox(height: 14),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: options.map((e) {
+            final isSelected = selected == e;
+
+            return GestureDetector(
+              onTap: () => onSelect(e),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: isSelected
+                      ? const LinearGradient(
+                          colors: [Color(0xFF2563EB), Color(0xFF4F46E5)],
+                        )
+                      : null,
+                  color: isSelected ? null : Colors.grey.shade100,
+                ),
+                child: Text(
+                  e,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13.5,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 26),
+      ],
+    );
+  }
 }
 
 class AnimatedJobCard extends StatelessWidget {
@@ -836,257 +1175,466 @@ class NotificationsScreen extends StatelessWidget {
       const Center(child: Text('Notifications'));
 }
 
-class _JobFilterSheet extends StatefulWidget {
-  const _JobFilterSheet();
+// class _JobFilterSheet extends StatefulWidget {
+//   const _JobFilterSheet();
 
-  @override
-  State<_JobFilterSheet> createState() => _JobFilterSheetState();
-}
+//   @override
+//   State<_JobFilterSheet> createState() => _JobFilterSheetState();
+// }
 
-class _JobFilterSheetState extends State<_JobFilterSheet> {
-  String experience = '';
-  String jobType = '';
-  String workMode = '';
+// class _JobFilterSheetState extends State<_JobFilterSheet> {
+//   final controller = Get.find<JobsController>();
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(34)),
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromARGB(134, 155, 155, 211),
-            Color.fromARGB(255, 116, 163, 207),
-            Color.fromARGB(157, 100, 122, 166),
-          ],
-        ),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 80),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// DRAG HANDLE
-              Center(
-                child: Container(
-                  height: 4,
-                  width: 46,
-                  margin: const EdgeInsets.only(bottom: 18),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-              ),
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
+//       decoration: BoxDecoration(
+//         borderRadius: const BorderRadius.vertical(top: Radius.circular(34)),
+//         gradient: const LinearGradient(
+//           begin: Alignment.topCenter,
+//           end: Alignment.bottomCenter,
+//           colors: [
+//             Color.fromARGB(134, 155, 155, 211),
+//             Color.fromARGB(255, 116, 163, 207),
+//             Color.fromARGB(157, 100, 122, 166),
+//           ],
+//         ),
+//       ),
+//       child: SafeArea(
+//         top: false,
+//         child: SingleChildScrollView(
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Center(
+//                 child: Container(
+//                   height: 4,
+//                   width: 46,
+//                   margin: const EdgeInsets.only(bottom: 18),
+//                   decoration: BoxDecoration(
+//                     color: Colors.grey.shade300,
+//                     borderRadius: BorderRadius.circular(4),
+//                   ),
+//                 ),
+//               ),
 
-              /// HEADER
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      'Filter Jobs',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close_rounded),
-                  ),
-                ],
-              ),
+//               Row(
+//                 children: [
+//                   const Expanded(
+//                     child: Text(
+//                       'Filter Jobs',
+//                       style: TextStyle(
+//                         fontSize: 22,
+//                         fontWeight: FontWeight.w900,
+//                       ),
+//                     ),
+//                   ),
+//                   IconButton(
+//                     onPressed: () => Navigator.pop(context),
+//                     icon: const Icon(Icons.close_rounded),
+//                   ),
+//                 ],
+//               ),
 
-              const SizedBox(height: 24),
+//               const SizedBox(height: 24),
 
-              /// EXPERIENCE
-              _filterSection(
-                title: 'Experience',
-                options: ['Fresher', '0-1', '1-3', '3+'],
-                selected: experience,
-                onSelect: (v) => setState(() => experience = v),
-              ),
+//               Obx(
+//                 () => _filterSection(
+//                   title: 'Experience',
+//                   options: ['Fresher', '0-1', '1-3', '3+'],
+//                   selected: controller.selectedExperience.value,
+//                   onSelect: (v) => controller.selectedExperience.value = v,
+//                 ),
+//               ),
 
-              /// JOB TYPE
-              _filterSection(
-                title: 'Job Category',
-                options: ['Technical', 'Non-Technical'],
-                selected: jobType,
-                onSelect: (v) => setState(() => jobType = v),
-              ),
+//               Obx(
+//                 () => _filterSection(
+//                   title: 'Job Category',
+//                   options: ['Technical', 'Non-Technical'],
+//                   selected: controller.selectedJobType.value,
+//                   onSelect: (v) => controller.selectedJobType.value = v,
+//                 ),
+//               ),
 
-              /// WORK MODE
-              _filterSection(
-                title: 'Work Mode',
-                options: ['WFH', 'Remote', 'Hybrid'],
-                selected: workMode,
-                onSelect: (v) => setState(() => workMode = v),
-              ),
+//               Obx(
+//                 () => _filterSection(
+//                   title: 'Work Mode',
+//                   options: ['WFH', 'Remote', 'Hybrid'],
+//                   selected: controller.selectedWorkMode.value,
+//                   onSelect: (v) => controller.selectedWorkMode.value = v,
+//                 ),
+//               ),
 
-              const SizedBox(height: 32),
+//               const SizedBox(height: 32),
 
-              /// ACTION BUTTONS
-              Row(
-                children: [
-                  /// RESET (GLASS BUTTON)
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          experience = '';
-                          jobType = '';
-                          workMode = '';
-                        });
-                      },
-                      child: Container(
-                        height: 56,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          color: Colors.white.withOpacity(0.85),
-                          border: Border.all(color: Colors.grey.shade300),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.08),
-                              blurRadius: 16,
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Reset',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+//               Row(
+//                 children: [
+//                   Expanded(
+//                     child: GestureDetector(
+//                       onTap: () {
+//                         controller.resetFilters();
+//                         Navigator.pop(context);
+//                       },
+//                       child: Container(
+//                         height: 56,
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(18),
+//                           color: Colors.white.withOpacity(0.85),
+//                         ),
+//                         child: const Center(
+//                           child: Text(
+//                             'Reset',
+//                             style: TextStyle(
+//                               fontSize: 15,
+//                               fontWeight: FontWeight.w700,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                   const SizedBox(width: 18),
+//                   Expanded(
+//                     child: GestureDetector(
+//                       onTap: () {
+//                         controller.applyFilters();
+//                         Navigator.pop(context);
+//                       },
+//                       child: Container(
+//                         height: 56,
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(18),
+//                           gradient: const LinearGradient(
+//                             colors: [Color(0xFF2563EB), Color(0xFF4F46E5)],
+//                           ),
+//                         ),
+//                         child: const Center(
+//                           child: Text(
+//                             'Apply Filters',
+//                             style: TextStyle(
+//                               color: Colors.white,
+//                               fontSize: 15,
+//                               fontWeight: FontWeight.w900,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 
-                  const SizedBox(width: 18),
+//   Widget _filterSection({
+//     required String title,
+//     required List<String> options,
+//     required String selected,
+//     required Function(String) onSelect,
+//   }) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text(
+//           title,
+//           style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+//         ),
+//         const SizedBox(height: 14),
+//         Wrap(
+//           spacing: 12,
+//           runSpacing: 12,
+//           children: options.map((e) {
+//             final isSelected = selected == e;
+//             return GestureDetector(
+//               onTap: () => onSelect(e),
+//               child: AnimatedContainer(
+//                 duration: const Duration(milliseconds: 220),
+//                 padding: const EdgeInsets.symmetric(
+//                   horizontal: 18,
+//                   vertical: 10,
+//                 ),
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(16),
+//                   gradient: isSelected
+//                       ? const LinearGradient(
+//                           colors: [Color(0xFF2563EB), Color(0xFF4F46E5)],
+//                         )
+//                       : null,
+//                   color: isSelected ? null : Colors.grey.shade100,
+//                 ),
+//                 child: Text(
+//                   e,
+//                   style: TextStyle(
+//                     color: isSelected ? Colors.white : Colors.black87,
+//                     fontWeight: FontWeight.w700,
+//                   ),
+//                 ),
+//               ),
+//             );
+//           }).toList(),
+//         ),
+//         const SizedBox(height: 24),
+//       ],
+//     );
+//   }
+// }
 
-                  /// APPLY (GRADIENT PRIMARY)
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        height: 56,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Color(0xFF2563EB),
-                              Color(0xFF4F46E5),
-                              Color(0xFF38BDF8),
-                            ],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF2563EB).withOpacity(0.55),
-                              blurRadius: 26,
-                              offset: const Offset(0, 12),
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Apply Filters',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 0.6,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+// class _JobFilterSheet extends StatefulWidget {
+//   const _JobFilterSheet();
 
-  /// PREMIUM FILTER SECTION
-  Widget _filterSection({
-    required String title,
-    required List<String> options,
-    required String selected,
-    required Function(String) onSelect,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
-        ),
-        const SizedBox(height: 14),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          children: options.map((e) {
-            final isSelected = selected == e;
-            return GestureDetector(
-              onTap: () => onSelect(e),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 220),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  gradient: isSelected
-                      ? const LinearGradient(
-                          colors: [Color(0xFF2563EB), Color(0xFF4F46E5)],
-                        )
-                      : null,
-                  color: isSelected ? null : Colors.grey.shade100,
-                  boxShadow: isSelected
-                      ? [
-                          BoxShadow(
-                            color: const Color(0xFF2563EB).withOpacity(0.45),
-                            blurRadius: 16,
-                          ),
-                        ]
-                      : [],
-                ),
-                child: Text(
-                  e,
-                  style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black87,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 13.5,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-        const SizedBox(height: 24),
-      ],
-    );
-  }
-}
+//   @override
+//   State<_JobFilterSheet> createState() => _JobFilterSheetState();
+// }
+
+// class _JobFilterSheetState extends State<_JobFilterSheet> {
+//   String experience = '';
+//   String jobType = '';
+//   String workMode = '';
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
+//       decoration: BoxDecoration(
+//         borderRadius: const BorderRadius.vertical(top: Radius.circular(34)),
+//         gradient: const LinearGradient(
+//           begin: Alignment.topCenter,
+//           end: Alignment.bottomCenter,
+//           colors: [
+//             Color.fromARGB(134, 155, 155, 211),
+//             Color.fromARGB(255, 116, 163, 207),
+//             Color.fromARGB(157, 100, 122, 166),
+//           ],
+//         ),
+//         boxShadow: [
+//           BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 80),
+//         ],
+//       ),
+//       child: SafeArea(
+//         top: false,
+//         child: SingleChildScrollView(
+//           physics: const BouncingScrollPhysics(),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               /// DRAG HANDLE
+//               Center(
+//                 child: Container(
+//                   height: 4,
+//                   width: 46,
+//                   margin: const EdgeInsets.only(bottom: 18),
+//                   decoration: BoxDecoration(
+//                     color: Colors.grey.shade300,
+//                     borderRadius: BorderRadius.circular(4),
+//                   ),
+//                 ),
+//               ),
+
+//               /// HEADER
+//               Row(
+//                 children: [
+//                   const Expanded(
+//                     child: Text(
+//                       'Filter Jobs',
+//                       style: TextStyle(
+//                         fontSize: 22,
+//                         fontWeight: FontWeight.w900,
+//                         letterSpacing: 0.2,
+//                       ),
+//                     ),
+//                   ),
+//                   IconButton(
+//                     onPressed: () => Navigator.pop(context),
+//                     icon: const Icon(Icons.close_rounded),
+//                   ),
+//                 ],
+//               ),
+
+//               const SizedBox(height: 24),
+
+//               /// EXPERIENCE
+//               _filterSection(
+//                 title: 'Experience',
+//                 options: ['Fresher', '0-1', '1-3', '3+'],
+//                 selected: experience,
+//                 onSelect: (v) => setState(() => experience = v),
+//               ),
+
+//               /// JOB TYPE
+//               _filterSection(
+//                 title: 'Job Category',
+//                 options: ['Technical', 'Non-Technical'],
+//                 selected: jobType,
+//                 onSelect: (v) => setState(() => jobType = v),
+//               ),
+
+//               /// WORK MODE
+//               _filterSection(
+//                 title: 'Work Mode',
+//                 options: ['WFH', 'Remote', 'Hybrid'],
+//                 selected: workMode,
+//                 onSelect: (v) => setState(() => workMode = v),
+//               ),
+
+//               const SizedBox(height: 32),
+
+//               /// ACTION BUTTONS
+//               Row(
+//                 children: [
+//                   /// RESET (GLASS BUTTON)
+//                   Expanded(
+//                     child: GestureDetector(
+//                       onTap: () {
+//                         setState(() {
+//                           experience = '';
+//                           jobType = '';
+//                           workMode = '';
+//                         });
+//                       },
+//                       child: Container(
+//                         height: 56,
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(18),
+//                           color: Colors.white.withOpacity(0.85),
+//                           border: Border.all(color: Colors.grey.shade300),
+//                           boxShadow: [
+//                             BoxShadow(
+//                               color: Colors.black.withOpacity(0.08),
+//                               blurRadius: 16,
+//                             ),
+//                           ],
+//                         ),
+//                         child: const Center(
+//                           child: Text(
+//                             'Reset',
+//                             style: TextStyle(
+//                               fontSize: 15,
+//                               fontWeight: FontWeight.w700,
+//                               color: Colors.black87,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+
+//                   const SizedBox(width: 18),
+
+//                   /// APPLY (GRADIENT PRIMARY)
+//                   Expanded(
+//                     child: GestureDetector(
+//                       onTap: () => Navigator.pop(context),
+//                       child: Container(
+//                         height: 56,
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(18),
+//                           gradient: const LinearGradient(
+//                             begin: Alignment.topLeft,
+//                             end: Alignment.bottomRight,
+//                             colors: [
+//                               Color(0xFF2563EB),
+//                               Color(0xFF4F46E5),
+//                               Color(0xFF38BDF8),
+//                             ],
+//                           ),
+//                           boxShadow: [
+//                             BoxShadow(
+//                               color: const Color(0xFF2563EB).withOpacity(0.55),
+//                               blurRadius: 26,
+//                               offset: const Offset(0, 12),
+//                             ),
+//                           ],
+//                         ),
+//                         child: const Center(
+//                           child: Text(
+//                             'Apply Filters',
+//                             style: TextStyle(
+//                               color: Colors.white,
+//                               fontSize: 15,
+//                               fontWeight: FontWeight.w900,
+//                               letterSpacing: 0.6,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   /// PREMIUM FILTER SECTION
+//   Widget _filterSection({
+//     required String title,
+//     required List<String> options,
+//     required String selected,
+//     required Function(String) onSelect,
+//   }) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text(
+//           title,
+//           style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+//         ),
+//         const SizedBox(height: 14),
+//         Wrap(
+//           spacing: 12,
+//           runSpacing: 12,
+//           children: options.map((e) {
+//             final isSelected = selected == e;
+//             return GestureDetector(
+//               onTap: () => onSelect(e),
+//               child: AnimatedContainer(
+//                 duration: const Duration(milliseconds: 220),
+//                 padding: const EdgeInsets.symmetric(
+//                   horizontal: 18,
+//                   vertical: 10,
+//                 ),
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(16),
+//                   gradient: isSelected
+//                       ? const LinearGradient(
+//                           colors: [Color(0xFF2563EB), Color(0xFF4F46E5)],
+//                         )
+//                       : null,
+//                   color: isSelected ? null : Colors.grey.shade100,
+//                   boxShadow: isSelected
+//                       ? [
+//                           BoxShadow(
+//                             color: const Color(0xFF2563EB).withOpacity(0.45),
+//                             blurRadius: 16,
+//                           ),
+//                         ]
+//                       : [],
+//                 ),
+//                 child: Text(
+//                   e,
+//                   style: TextStyle(
+//                     color: isSelected ? Colors.white : Colors.black87,
+//                     fontWeight: FontWeight.w700,
+//                     fontSize: 13.5,
+//                   ),
+//                 ),
+//               ),
+//             );
+//           }).toList(),
+//         ),
+//         const SizedBox(height: 24),
+//       ],
+//     );
+//   }
+// }
 
 class InstaJobListScreen extends StatelessWidget {
   const InstaJobListScreen({super.key});
