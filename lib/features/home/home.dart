@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:jobportal/controller/jobs_controller.dart';
 import 'package:jobportal/features/profile/profile_screen.dart';
@@ -101,96 +102,209 @@ class _GlassBottomNav extends StatelessWidget {
   }
 }
 
-class JobListScreen extends StatelessWidget {
-  const JobListScreen({super.key});
+// class JobListScreen extends StatelessWidget {
+//   const JobListScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    final JobsController controller = Get.find<JobsController>();
+//   @override
+//   Widget build(BuildContext context) {
+//     final JobsController controller = Get.put(
+//       JobsController(),
+//       permanent: true,
+//     );
 
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFFF7FAFF), Color(0xFFEFF4FF)],
-        ),
-      ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 18),
+//     return Container(
+//       decoration: const BoxDecoration(
+//         gradient: LinearGradient(
+//           begin: Alignment.topCenter,
+//           end: Alignment.bottomCenter,
+//           colors: [Color(0xFFF7FAFF), Color(0xFFEFF4FF)],
+//         ),
+//       ),
+//       child: SafeArea(
+//         child: Column(
+//           children: [
+//             const SizedBox(height: 18),
 
-            /// HEADER
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      'Find Jobs',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                  ShimmerProfileButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const ProfileScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
+//             /// HEADER
+//             Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 22),
+//               child: Row(
+//                 children: [
+//                   const Expanded(
+//                     child: Text(
+//                       'Find Jobs',
+//                       style: TextStyle(
+//                         fontSize: 26,
+//                         fontWeight: FontWeight.w800,
+//                       ),
+//                     ),
+//                   ),
+//                   ShimmerProfileButton(
+//                     onPressed: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (_) => const ProfileScreen(),
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                 ],
+//               ),
+//             ),
 
-            const SizedBox(height: 16),
+//             const SizedBox(height: 16),
 
-            /// SEARCH BAR
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22),
-              child: _GlassSearchBar(),
-            ),
+//             /// SEARCH BAR
+//             Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 22),
+//               child: _GlassSearchBar(),
+//             ),
 
-            const SizedBox(height: 22),
+//             const SizedBox(height: 22),
 
-            /// JOB LIST
-            Expanded(
-              child: Obx(() {
-                if (controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+//             /// JOB LIST
+//             Expanded(
+//               child: Obx(() {
+//                 if (controller.isLoading.value) {
+//                   return const Center(child: CircularProgressIndicator());
+//                 }
 
-                if (controller.filteredJobs.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'No jobs found',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  );
-                }
+//                 if (controller.error.isNotEmpty) {
+//                   return Center(
+//                     child: Column(
+//                       mainAxisSize: MainAxisSize.min,
+//                       children: [
+//                         Text(
+//                           controller.error.value,
+//                           textAlign: TextAlign.center,
+//                         ),
+//                         const SizedBox(height: 12),
+//                         ElevatedButton(
+//                           onPressed: controller.fetchJobs,
+//                           child: const Text("Retry"),
+//                         ),
+//                       ],
+//                     ),
+//                   );
+//                 }
 
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 22),
-                  itemCount: controller.filteredJobs.length,
-                  itemBuilder: (context, index) {
-                    final JobModel job = controller.filteredJobs[index];
-                    return AnimatedJobCard(index: index, job: job);
-                  },
-                );
-              }),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//                 if (controller.filteredJobs.isEmpty) {
+//                   return const Center(
+//                     child: Text(
+//                       'No jobs found',
+//                       style: TextStyle(fontSize: 16),
+//                     ),
+//                   );
+//                 }
+
+//                 return ListView.builder(
+//                   padding: const EdgeInsets.symmetric(horizontal: 22),
+//                   itemCount: controller.filteredJobs.length,
+//                   itemBuilder: (context, index) {
+//                     final job = controller.filteredJobs[index];
+//                     return AnimatedJobCard(index: index, job: job);
+//                   },
+//                 );
+//               }),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class JobListScreen extends StatelessWidget {
+//   const JobListScreen({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final JobsController controller = Get.find<JobsController>();
+
+//     return Container(
+//       decoration: const BoxDecoration(
+//         gradient: LinearGradient(
+//           begin: Alignment.topCenter,
+//           end: Alignment.bottomCenter,
+//           colors: [Color(0xFFF7FAFF), Color(0xFFEFF4FF)],
+//         ),
+//       ),
+//       child: SafeArea(
+//         child: Column(
+//           children: [
+//             const SizedBox(height: 18),
+
+//             /// HEADER
+//             Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 22),
+//               child: Row(
+//                 children: [
+//                   const Expanded(
+//                     child: Text(
+//                       'Find Jobs',
+//                       style: TextStyle(
+//                         fontSize: 26,
+//                         fontWeight: FontWeight.w800,
+//                       ),
+//                     ),
+//                   ),
+//                   ShimmerProfileButton(
+//                     onPressed: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (_) => const ProfileScreen(),
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                 ],
+//               ),
+//             ),
+
+//             const SizedBox(height: 16),
+
+//             /// SEARCH BAR
+//             const Padding(
+//               padding: EdgeInsets.symmetric(horizontal: 22),
+//               child: _GlassSearchBar(),
+//             ),
+
+//             const SizedBox(height: 22),
+
+//             /// JOB LIST
+//             Expanded(
+//               child: Obx(() {
+//                 if (controller.isLoading.value) {
+//                   return const Center(child: CircularProgressIndicator());
+//                 }
+
+//                 if (controller.filteredJobs.isEmpty) {
+//                   return const Center(
+//                     child: Text(
+//                       'No jobs found',
+//                       style: TextStyle(fontSize: 16),
+//                     ),
+//                   );
+//                 }
+
+//                 return ListView.builder(
+//                   padding: const EdgeInsets.symmetric(horizontal: 22),
+//                   itemCount: controller.filteredJobs.length,
+//                   itemBuilder: (context, index) {
+//                     final JobModel job = controller.filteredJobs[index];
+//                     return AnimatedJobCard(index: index, job: job);
+//                   },
+//                 );
+//               }),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 // class _GlassSearchBar extends StatelessWidget {
 //   const _GlassSearchBar();
@@ -288,6 +402,117 @@ class JobListScreen extends StatelessWidget {
 //     );
 //   }
 // }
+class JobListScreen extends StatelessWidget {
+  const JobListScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final JobsController controller = Get.find<JobsController>();
+
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFFF7FAFF), Color(0xFFEFF4FF)],
+        ),
+      ),
+      child: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 18),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 22),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Find Jobs',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  ShimmerProfileButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ProfileScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 22),
+              child: _GlassSearchBar(),
+            ),
+
+            const SizedBox(height: 22),
+
+            Expanded(
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (controller.error.isNotEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.wifi_off, size: 40),
+                        const SizedBox(height: 12),
+                        Text(controller.error.value),
+                        const SizedBox(height: 12),
+                        ElevatedButton(
+                          onPressed: controller.fetchJobs,
+                          child: const Text("Retry"),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                if (controller.filteredJobs.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No jobs found',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  );
+                }
+
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    controller.fetchJobs();
+                  },
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 22),
+                    itemCount: controller.filteredJobs.length,
+                    itemBuilder: (context, index) {
+                      final job = controller.filteredJobs[index];
+                      return AnimatedJobCard(index: index, job: job);
+                    },
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _GlassSearchBar extends StatelessWidget {
   const _GlassSearchBar();
 
@@ -1871,23 +2096,23 @@ class JobDetailsScreen extends StatelessWidget {
                   /// JOB DESCRIPTION
                   _JobDescriptionBlock(job: job),
 
-                  const SizedBox(height: 20),
+                  // const SizedBox(height: 20),
 
-                  /// RESPONSIBILITIES
-                  if (job.responsibilities.isNotEmpty)
-                    _JobListBlock(
-                      title: 'Responsibilities',
-                      items: job.responsibilities,
-                    ),
+                  // /// RESPONSIBILITIES
+                  // if (job.responsibilities.isNotEmpty)
+                  //   _JobListBlock(
+                  //     title: 'Responsibilities',
+                  //     items: job.responsibilities,
+                  //   ),
 
-                  const SizedBox(height: 20),
+                  // const SizedBox(height: 20),
 
-                  /// REQUIREMENTS
-                  if (job.requirements.isNotEmpty)
-                    _JobListBlock(
-                      title: 'Requirements',
-                      items: job.requirements,
-                    ),
+                  // /// REQUIREMENTS
+                  // if (job.requirements.isNotEmpty)
+                  //   _JobListBlock(
+                  //     title: 'Requirements',
+                  //     items: job.requirements,
+                  //   ),
                 ],
               ),
             ),
@@ -2082,6 +2307,98 @@ class _JobOverviewCard extends StatelessWidget {
 //     );
 //   }
 // }
+// class _JobDescriptionBlock extends StatelessWidget {
+//   final JobModel job;
+
+//   const _JobDescriptionBlock({required this.job});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         _glassCard(
+//           title: 'Job Description',
+//           child: Text(
+//             job.description.isNotEmpty
+//                 ? job.description
+//                 : 'No description provided.',
+//             style: const TextStyle(height: 1.65, fontSize: 14.5),
+//           ),
+//         ),
+
+//         const SizedBox(height: 22),
+
+//         if (job.responsibilities.isNotEmpty)
+//           _glassCard(
+//             title: 'Responsibilities',
+//             child: _bulletList(job.responsibilities),
+//           ),
+
+//         if (job.responsibilities.isNotEmpty) const SizedBox(height: 22),
+
+//         if (job.requirements.isNotEmpty)
+//           _glassCard(
+//             title: 'Requirements',
+//             child: _bulletList(job.requirements),
+//           ),
+//       ],
+//     );
+//   }
+
+//   Widget _glassCard({required String title, required Widget child}) {
+//     return Container(
+//       padding: const EdgeInsets.all(22),
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(26),
+//         gradient: LinearGradient(colors: [Colors.white, Colors.blue.shade50]),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(0.08),
+//             blurRadius: 26,
+//             offset: const Offset(0, 16),
+//           ),
+//         ],
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Text(
+//             title,
+//             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+//           ),
+//           const SizedBox(height: 14),
+//           child,
+//         ],
+//       ),
+//     );
+//   }
+
+//   /// 🔹 Bullet List UI
+//   Widget _bulletList(List<String> items) {
+//     return Column(
+//       children: items
+//           .map(
+//             (e) => Padding(
+//               padding: const EdgeInsets.only(bottom: 10),
+//               child: Row(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   const Text("• ", style: TextStyle(fontSize: 18)),
+//                   Expanded(
+//                     child: Text(
+//                       e,
+//                       style: const TextStyle(fontSize: 14.5, height: 1.6),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           )
+//           .toList(),
+//     );
+//   }
+// }
 class _JobDescriptionBlock extends StatelessWidget {
   final JobModel job;
 
@@ -2090,38 +2407,93 @@ class _JobDescriptionBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _glassCard(
-          title: 'Job Description',
-          child: Text(
+        _card(
+          "Job Description",
+          Text(
             job.description.isNotEmpty
                 ? job.description
-                : 'No description provided.',
-            style: const TextStyle(height: 1.65, fontSize: 14.5),
+                : "No description provided",
           ),
         ),
 
-        const SizedBox(height: 22),
-
         if (job.responsibilities.isNotEmpty)
-          _glassCard(
-            title: 'Responsibilities',
-            child: _bulletList(job.responsibilities),
-          ),
-
-        if (job.responsibilities.isNotEmpty) const SizedBox(height: 22),
+          _card("Responsibilities", _bulletList(job.responsibilities)),
 
         if (job.requirements.isNotEmpty)
-          _glassCard(
-            title: 'Requirements',
-            child: _bulletList(job.requirements),
-          ),
+          _card("Requirements", _bulletList(job.requirements)),
       ],
     );
   }
 
-  /// 🔹 Glassmorphism Card
+  Widget _card(String title, Widget child) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 26),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+          ),
+          const SizedBox(height: 14),
+          child,
+        ],
+      ),
+    );
+  }
+
+  Widget _list(List<String> items) {
+    return Column(
+      children: items
+          .map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("• "),
+                  Expanded(child: Text(e)),
+                ],
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Widget _bulletList(List<String> items) {
+    return Column(
+      children: items
+          .map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("• ", style: TextStyle(fontSize: 18)),
+                  Expanded(
+                    child: Text(
+                      e,
+                      style: const TextStyle(fontSize: 14.5, height: 1.6),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+
   Widget _glassCard({required String title, required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(22),
@@ -2147,31 +2519,6 @@ class _JobDescriptionBlock extends StatelessWidget {
           child,
         ],
       ),
-    );
-  }
-
-  /// 🔹 Bullet List UI
-  Widget _bulletList(List<String> items) {
-    return Column(
-      children: items
-          .map(
-            (e) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("• ", style: TextStyle(fontSize: 18)),
-                  Expanded(
-                    child: Text(
-                      e,
-                      style: const TextStyle(fontSize: 14.5, height: 1.6),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-          .toList(),
     );
   }
 }
