@@ -1,3 +1,40 @@
+// class JobModel {
+//   final String id;
+//   final String companyName;
+//   final String companyLogo;
+//   final String jobTitle;
+//   final String salary;
+//   final String workMode;
+//   final String location;
+//   final String experience;
+//   final String applyLink;
+
+//   JobModel({
+//     required this.id,
+//     required this.companyName,
+//     required this.companyLogo,
+//     required this.jobTitle,
+//     required this.salary,
+//     required this.workMode,
+//     required this.location,
+//     required this.experience,
+//     required this.applyLink,
+//   });
+
+//   factory JobModel.fromFirestore(Map<String, dynamic> data, String id) {
+//     return JobModel(
+//       id: id,
+//       companyName: data['companyName'] ?? '',
+//       companyLogo: data['companyLogo'] ?? '',
+//       jobTitle: data['jobTitle'] ?? '',
+//       salary: data['salary'] ?? '',
+//       workMode: data['workMode'] ?? '',
+//       location: data['location'] ?? '',
+//       experience: data['experience'] ?? '',
+//       applyLink: data['applyLink'] ?? '',
+//     );
+//   }
+// }
 class JobModel {
   final String id;
   final String companyName;
@@ -8,6 +45,9 @@ class JobModel {
   final String location;
   final String experience;
   final String applyLink;
+  final String description;
+  final List<String> responsibilities;
+  final List<String> requirements;
 
   JobModel({
     required this.id,
@@ -19,6 +59,9 @@ class JobModel {
     required this.location,
     required this.experience,
     required this.applyLink,
+    required this.description,
+    required this.responsibilities,
+    required this.requirements,
   });
 
   factory JobModel.fromFirestore(Map<String, dynamic> data, String id) {
@@ -32,6 +75,9 @@ class JobModel {
       location: data['location'] ?? '',
       experience: data['experience'] ?? '',
       applyLink: data['applyLink'] ?? '',
+      description: data['description'] ?? '',
+      responsibilities: List<String>.from(data['responsibilities'] ?? []),
+      requirements: List<String>.from(data['requirements'] ?? []),
     );
   }
 }
