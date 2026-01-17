@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jobportal/features/home/home.dart';
+import 'package:jobportal/jobseeker/features/home/home.dart';
+import 'package:jobportal/jobseeker/features/login/login.dart';
+import 'package:jobportal/jobseeker/features/onboarding/onboarding_screen.dart';
+import 'package:jobportal/jobseeker/features/personal/personal_details.dart';
+import 'package:jobportal/jobseeker/features/role_selection/role_selection.dart';
+import 'package:jobportal/jobseeker/features/splash/splash_screen.dart';
 
 // FEATURES
-import 'features/splash/splash_screen.dart';
-import 'features/onboarding/onboarding_screen.dart';
-import 'features/role_selection/role_selection.dart';
-import 'features/login/login.dart';
-import 'features/personal/personal_details.dart';
 //import 'features/jobs/job_list_screen.dart';
 
 class JobFinderApp extends StatelessWidget {

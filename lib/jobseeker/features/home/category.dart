@@ -10,6 +10,8 @@ class CategoryChips extends StatelessWidget {
     'Non-IT',
   ];
 
+  const CategoryChips({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

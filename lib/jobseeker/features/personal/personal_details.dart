@@ -406,7 +406,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen>
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: DropdownButtonFormField<String>(
-        value: value.isEmpty ? null : value,
+        initialValue: value.isEmpty ? null : value,
         hint: Text(hint),
         items: items
             .map((e) => DropdownMenuItem(value: e, child: Text(e)))

@@ -1,10 +1,12 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:jobportal/controller/profile_image_controller.dart';
-import 'package:jobportal/features/profile/edit_profile.dart';
+//import 'package:jobportal/controller/profile_image_controller.dart';
+import 'package:jobportal/features/jobs/saved_jobs.dart';
+//import 'package:jobportal/features/profile/edit_profile.dart';
+import 'package:jobportal/jobseeker/controller/profile_image_controller.dart';
+import 'package:jobportal/jobseeker/features/profile/edit_profile.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -125,7 +127,44 @@ class _ProfileView extends StatelessWidget {
               /// 📊 PROFILE COMPLETION
               ProfileCompletionCard(percent: completion),
 
-              const SizedBox(height: 24),
+              //  const SizedBox(height: 24),
+              // const SizedBox(height: 22),
+
+              // SizedBox(
+              //   width: double.infinity,
+              //   height: 50,
+              //   child: ElevatedButton.icon(
+              //     onPressed: () => Get.to(() => const SavedJobsScreen()),
+              //     icon: const Icon(Icons.bookmark),
+              //     label: const Text("Saved Jobs"),
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: const Color(0xFF2563EB),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(16),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              const SizedBox(height: 20),
+
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Get.to(() => const SavedJobsScreen());
+                  },
+                  icon: const Icon(Icons.bookmark),
+                  label: const Text("Saved Jobs"),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
 
               /// ✏️ EDIT PROFILE
               SizedBox(

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 class WelcomeSection extends StatelessWidget {
   final String name;
 
-  const WelcomeSection({required this.name});
+  const WelcomeSection({super.key, required this.name});
 
   @override
   Widget build(BuildContext context) {

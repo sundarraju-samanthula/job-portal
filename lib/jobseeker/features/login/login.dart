@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jobportal/controller/auth_controller.dart';
+//import 'package:jobportal/controller/auth_controller.dart';
+import 'package:jobportal/jobseeker/controller/auth_controller.dart';
 import 'package:lottie/lottie.dart';
 
 class LoginScreen extends StatelessWidget {
