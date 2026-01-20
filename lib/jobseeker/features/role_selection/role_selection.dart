@@ -1,9 +1,293 @@
+// import 'dart:math';
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:lottie/lottie.dart';
+
+// enum SelectedRole { none, seeker, recruiter, service }
+
+// class RoleSelectionScreen extends StatefulWidget {
+//   const RoleSelectionScreen({super.key});
+
+//   @override
+//   State<RoleSelectionScreen> createState() => _RoleSelectionScreenState();
+// }
+
+// class _RoleSelectionScreenState extends State<RoleSelectionScreen>
+//     with TickerProviderStateMixin {
+//   late AnimationController _fadeController;
+//   late AnimationController _bgController;
+
+//   SelectedRole _selectedRole = SelectedRole.none;
+
+//   @override
+//   void initState() {
+//     super.initState();
+
+//     _fadeController = AnimationController(
+//       vsync: this,
+//       duration: const Duration(milliseconds: 700),
+//     )..forward();
+
+//     _bgController = AnimationController(
+//       vsync: this,
+//       duration: const Duration(seconds: 10),
+//     )..repeat();
+//   }
+
+//   @override
+//   void dispose() {
+//     _fadeController.dispose();
+//     _bgController.dispose();
+//     super.dispose();
+//   }
+
+//   void _selectSeeker() {
+//     setState(() => _selectedRole = SelectedRole.seeker);
+//   }
+
+//   void _selectService() {
+//     setState(() => _selectedRole = SelectedRole.service);
+//   }
+
+//   void _selectRecruiter() {
+//     Get.snackbar(
+//       'Coming Soon 🚀',
+//       'Recruiter features will be available in the next update.',
+//       snackPosition: SnackPosition.BOTTOM,
+//       backgroundColor: Colors.black.withOpacity(0.85),
+//       colorText: Colors.white,
+//       margin: const EdgeInsets.all(16),
+//       borderRadius: 16,
+//     );
+//   }
+
+//   void _continue() {
+//     if (_selectedRole == SelectedRole.seeker) {
+//       Get.toNamed('/login');
+//     } else if (_selectedRole == SelectedRole.service) {
+//       Get.toNamed('/service-login'); // create later
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final bool enabled =
+//         _selectedRole == SelectedRole.seeker ||
+//         _selectedRole == SelectedRole.service;
+
+//     return Scaffold(
+//       body: AnimatedBuilder(
+//         animation: _bgController,
+//         builder: (_, __) {
+//           return Container(
+//             decoration: BoxDecoration(
+//               gradient: LinearGradient(
+//                 begin: Alignment(sin(_bgController.value * pi), -1),
+//                 end: Alignment(-sin(_bgController.value * pi), 1),
+//                 colors: const [
+//                   Color(0xFFF4F7FF),
+//                   Color(0xFFEAF0FF),
+//                   Color(0xFFFFFFFF),
+//                 ],
+//               ),
+//             ),
+//             child: SafeArea(
+//               child: FadeTransition(
+//                 opacity: _fadeController,
+//                 child: Center(
+//                   child: ConstrainedBox(
+//                     constraints: const BoxConstraints(maxWidth: 420),
+//                     child: Column(
+//                       children: [
+//                         const SizedBox(height: 20),
+
+//                         const Text(
+//                           'Welcome 👋',
+//                           style: TextStyle(
+//                             fontSize: 30,
+//                             fontWeight: FontWeight.w800,
+//                           ),
+//                         ),
+//                         const SizedBox(height: 6),
+//                         const Text(
+//                           'Choose how you want to continue',
+//                           style: TextStyle(fontSize: 15, color: Colors.black54),
+//                         ),
+
+//                         const SizedBox(height: 24),
+
+//                         /// LIST (SCROLLABLE)
+//                         Expanded(
+//                           child: ListView(
+//                             padding: const EdgeInsets.symmetric(horizontal: 20),
+//                             children: [
+//                               _PremiumRoleTile(
+//                                 title: 'Looking for a Job',
+//                                 subtitle:
+//                                     'Discover verified opportunities and apply with confidence',
+//                                 lottiePath: 'assets/animation/jobseeker.json',
+//                                 accentColor: const Color(0xFF1A73E8),
+//                                 selected: enabled,
+//                                 onTap: _selectSeeker,
+//                               ),
+//                               const SizedBox(height: 18),
+//                               _PremiumRoleTile(
+//                                 title: 'Looking to Hire',
+//                                 subtitle:
+//                                     'Post jobs and find the right candidates',
+//                                 lottiePath: 'assets/animation/recruiter.json',
+//                                 accentColor: const Color(0xFF7E57C2),
+//                                 selected: false,
+//                                 onTap: _selectRecruiter,
+//                                 badge: 'Available Soon',
+//                               ),
+//                               const SizedBox(height: 18),
+//                               _PremiumRoleTile(
+//                                 title: 'Looking for a Service',
+//                                 subtitle:
+//                                     'Find electricians, plumbers & workers',
+//                                 lottiePath: 'assets/animation/recruiter.json',
+//                                 accentColor: const Color(0xFF009688),
+//                                 selected: _selectedRole == SelectedRole.service,
+//                                 onTap: _selectService,
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+
+//                         Padding(
+//                           padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+//                           child: PremiumContinueButton(
+//                             enabled: enabled,
+//                             onTap: _continue,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+
+// /* -------------------------------------------------------------------------- */
+// /*                          PREMIUM ROLE TILE                                 */
+// /* -------------------------------------------------------------------------- */
+
+// class _PremiumRoleTile extends StatelessWidget {
+//   final String title;
+//   final String subtitle;
+//   final String lottiePath;
+//   final Color accentColor;
+//   final bool selected;
+//   final VoidCallback onTap;
+//   final String? badge;
+
+//   const _PremiumRoleTile({
+//     required this.title,
+//     required this.subtitle,
+//     required this.lottiePath,
+//     required this.accentColor,
+//     required this.selected,
+//     required this.onTap,
+//     this.badge,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: onTap,
+//       child: AnimatedContainer(
+//         duration: const Duration(milliseconds: 350),
+//         padding: const EdgeInsets.all(18),
+//         decoration: BoxDecoration(
+//           color: Colors.white,
+//           borderRadius: BorderRadius.circular(26),
+//           border: Border.all(
+//             color: selected ? accentColor : Colors.transparent,
+//             width: 2,
+//           ),
+//           boxShadow: [
+//             BoxShadow(
+//               color: accentColor.withOpacity(selected ? 0.3 : 0.14),
+//               blurRadius: selected ? 30 : 18,
+//               offset: const Offset(0, 14),
+//             ),
+//           ],
+//         ),
+//         child: Row(
+//           children: [
+//             SizedBox(
+//               height: 82,
+//               width: 82,
+//               child: Lottie.asset(lottiePath, fit: BoxFit.contain),
+//             ),
+//             const SizedBox(width: 14),
+//             Expanded(
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Row(
+//                     children: [
+//                       Expanded(
+//                         child: Text(
+//                           title,
+//                           style: const TextStyle(
+//                             fontSize: 18,
+//                             fontWeight: FontWeight.w700,
+//                           ),
+//                         ),
+//                       ),
+//                       if (badge != null)
+//                         Container(
+//                           padding: const EdgeInsets.symmetric(
+//                             horizontal: 10,
+//                             vertical: 4,
+//                           ),
+//                           decoration: BoxDecoration(
+//                             color: Colors.orange.withOpacity(0.15),
+//                             borderRadius: BorderRadius.circular(12),
+//                           ),
+//                           child: Text(
+//                             badge!,
+//                             style: const TextStyle(
+//                               fontSize: 11,
+//                               color: Colors.orange,
+//                               fontWeight: FontWeight.w600,
+//                             ),
+//                           ),
+//                         ),
+//                     ],
+//                   ),
+//                   const SizedBox(height: 6),
+//                   Text(
+//                     subtitle,
+//                     style: const TextStyle(
+//                       fontSize: 13,
+//                       color: Colors.black54,
+//                       height: 1.5,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
-enum SelectedRole { none, seeker }
+enum SelectedRole { none, seeker, recruiter, service }
 
 class RoleSelectionScreen extends StatefulWidget {
   const RoleSelectionScreen({super.key});
@@ -45,7 +329,13 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
     setState(() => _selectedRole = SelectedRole.seeker);
   }
 
+  void _selectService() {
+    setState(() => _selectedRole = SelectedRole.service);
+  }
+
   void _selectRecruiter() {
+    setState(() => _selectedRole = SelectedRole.recruiter);
+
     Get.snackbar(
       'Coming Soon 🚀',
       'Recruiter features will be available in the next update.',
@@ -60,12 +350,20 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
   void _continue() {
     if (_selectedRole == SelectedRole.seeker) {
       Get.toNamed('/login');
+    } else if (_selectedRole == SelectedRole.service) {
+      Get.toNamed('/service-login');
+    } else if (_selectedRole == SelectedRole.recruiter) {
+      Get.snackbar(
+        'Coming Soon 🚀',
+        'Recruiter features will be available soon.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool enabled = _selectedRole == SelectedRole.seeker;
+    final bool enabled = _selectedRole != SelectedRole.none;
 
     return Scaffold(
       body: AnimatedBuilder(
@@ -108,7 +406,6 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
 
                         const SizedBox(height: 24),
 
-                        /// LIST (SCROLLABLE)
                         Expanded(
                           child: ListView(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -119,7 +416,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
                                     'Discover verified opportunities and apply with confidence',
                                 lottiePath: 'assets/animation/jobseeker.json',
                                 accentColor: const Color(0xFF1A73E8),
-                                selected: enabled,
+                                selected: _selectedRole == SelectedRole.seeker,
                                 onTap: _selectSeeker,
                               ),
                               const SizedBox(height: 18),
@@ -129,9 +426,20 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
                                     'Post jobs and find the right candidates',
                                 lottiePath: 'assets/animation/recruiter.json',
                                 accentColor: const Color(0xFF7E57C2),
-                                selected: false,
+                                selected:
+                                    _selectedRole == SelectedRole.recruiter,
                                 onTap: _selectRecruiter,
-                                badge: 'Available Soon',
+                                badge: 'Coming Soon',
+                              ),
+                              const SizedBox(height: 18),
+                              _PremiumRoleTile(
+                                title: 'Looking for a Service',
+                                subtitle:
+                                    'Find electricians, plumbers & workers',
+                                lottiePath: 'assets/animation/recruiter.json',
+                                accentColor: const Color(0xFF009688),
+                                selected: _selectedRole == SelectedRole.service,
+                                onTap: _selectService,
                               ),
                             ],
                           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:jobportal/core/role.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -68,24 +69,50 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   /// 🔐 AUTH-AWARE SPLASH FLOW
+  // Future<void> _startSequence() async {
+  //   _logoController.forward();
+  //   await Future.delayed(const Duration(milliseconds: 400));
+  //   _textController.forward();
+
+  //   // ⏳ Let animation breathe
+  //   await Future.delayed(const Duration(seconds: 3));
+
+  //   final user = FirebaseAuth.instance.currentUser;
+
+  //   if (!mounted) return;
+
+  //   if (user != null) {
+  //     // ✅ User already logged in
+  //     Get.offAllNamed('/home');
+  //   } else {
+  //     // ❌ Not logged in
+  //     Get.offAllNamed('/onboarding');
+  //   }
+  // }
+
   Future<void> _startSequence() async {
     _logoController.forward();
     await Future.delayed(const Duration(milliseconds: 400));
     _textController.forward();
 
-    // ⏳ Let animation breathe
     await Future.delayed(const Duration(seconds: 3));
 
     final user = FirebaseAuth.instance.currentUser;
+    final role = RoleStore.getRole();
 
     if (!mounted) return;
 
-    if (user != null) {
-      // ✅ User already logged in
-      Get.offAllNamed('/home');
-    } else {
-      // ❌ Not logged in
+    if (user == null || role == null) {
       Get.offAllNamed('/onboarding');
+      return;
+    }
+
+    if (role == 'jobseeker') {
+      Get.offAllNamed('/home');
+    } else if (role == 'service') {
+      Get.offAllNamed('/service-home');
+    } else {
+      Get.offAllNamed('/role');
     }
   }
 

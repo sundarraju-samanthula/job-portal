@@ -38,6 +38,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:jobportal/core/role.dart';
 
 class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -73,7 +74,10 @@ class AuthController extends GetxController {
       final doc = await _db.collection('users').doc(uid).get();
 
       if (doc.exists) {
+        RoleStore.setRole('jobseeker');
         Get.offAllNamed('/home');
+
+        //Get.offAllNamed('/home');
       } else {
         Get.offAllNamed('/personal-details');
       }
