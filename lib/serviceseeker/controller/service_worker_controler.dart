@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jobportal/core/role.dart';
 
 class ServiceProfileController extends GetxController {
@@ -64,10 +65,21 @@ class ServiceProfileController extends GetxController {
   }
 
   Future<void> logout() async {
+    final googleSignIn = GoogleSignIn();
     await _auth.signOut();
     RoleStore.clearRole();
+
+    await FirebaseAuth.instance.signOut();
+    await googleSignIn.disconnect(); // important
+
     Get.offAllNamed('/role');
   }
+
+  // Future<void> logout() async {
+  //   await _auth.signOut();
+  //   RoleStore.clearRole();
+  //   Get.offAllNamed('/role');
+  // }
 
   //import 'package:get_storage/get_storage.dart';
 

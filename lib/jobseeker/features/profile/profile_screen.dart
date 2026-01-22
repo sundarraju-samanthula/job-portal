@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jobportal/core/role.dart';
 //import 'package:jobportal/controller/profile_image_controller.dart';
 import 'package:jobportal/features/jobs/saved_jobs.dart';
@@ -201,9 +202,26 @@ class _ProfileView extends StatelessWidget {
                 height: 50,
                 child: OutlinedButton(
                   onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
-                    RoleStore.clearRole();
-                    Get.offAllNamed('/role');
+                    try {
+                      final googleSignIn = GoogleSignIn();
+
+                      await FirebaseAuth.instance.signOut();
+                      await googleSignIn.signOut(); // clears cached account
+                      await googleSignIn.disconnect(); // revokes access
+
+                      RoleStore.clearRole();
+
+                      Get.offAllNamed('/role');
+                    } catch (e) {
+                      print("Logout error: $e");
+                    }
+                    // await FirebaseAuth.instance.signOut();
+                    // final googleSignIn = GoogleSignIn();
+
+                    // //await FirebaseAuth.instance.signOut();
+                    // await googleSignIn.disconnect(); //
+                    // RoleStore.clearRole();
+                    // Get.offAllNamed('/role');
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.red,

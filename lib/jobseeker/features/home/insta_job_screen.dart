@@ -56,27 +56,28 @@ class InstaJobListScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22),
-              child: GlassSearchBar(),
-            ),
-            const SizedBox(height: 22),
+            Expanded(child: Text("will be availabl soon")),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 22),
+            //   child: GlassSearchBar(),
+            // ),
+            // const SizedBox(height: 22),
 
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 22),
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return InstaAnimatedJobCard(
-                    index: index,
-                    title: 'Senior Flutter Developer',
-                    company: 'Tech Labs',
-                    location: ' ',
-                    tag: index.isEven ? 'WFH' : 'Hybrid',
-                  );
-                },
-              ),
-            ),
+            // Expanded(
+            //   child: ListView.builder(
+            //     padding: const EdgeInsets.symmetric(horizontal: 22),
+            //     itemCount: 5,
+            //     itemBuilder: (context, index) {
+            //       return InstaAnimatedJobCard(
+            //         index: index,
+            //         title: 'Senior Flutter Developer',
+            //         company: 'Tech Labs',
+            //         location: ' ',
+            //         tag: index.isEven ? 'WFH' : 'Hybrid',
+            //       );
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),
